@@ -2,8 +2,15 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-});
+let pool: InstanceType<typeof Pool> | null = null;
 
-export default pool;
+const getPool = () => {
+    if (!pool) {
+        pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+        });
+    }
+    return pool;
+};
+
+export default getPool;
