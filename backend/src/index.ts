@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path'; 
+import { dirname, resolve } from 'path';
 import express from 'express';
-import register from "./routes/authentication.routes.js"
+import authRouter from "./routes/authentication.routes.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,7 +16,8 @@ app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
 });
 
-app.use('/auth', register);
+app.use('/auth', authRouter);
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
