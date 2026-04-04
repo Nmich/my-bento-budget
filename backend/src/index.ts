@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import express from 'express';
-import authRouter from "./routes/authentication.routes.js"
+import authRoutes from "./routes/authentication.routes.js"
+import { verifToken } from './middleware/authMiddleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,7 +17,8 @@ app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
 });
 
-app.use('/auth', authRouter);
+app.use('/auth', authRoutes);
+app.use(verifToken);
 
 
 app.listen(PORT, () => {
