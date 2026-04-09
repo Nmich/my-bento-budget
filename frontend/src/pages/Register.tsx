@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { register } from "../services/auth.services"
 import axios from "axios"
+import { Link, useNavigate } from "react-router-dom"
 
 export function Register() {
   //sate
@@ -12,16 +13,21 @@ export function Register() {
 
   const [error, setError] = useState('')
 
+  const navigate = useNavigate()
+
+
   //comportements
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (formData.password === formData.confirmPassword) {
       try {
         await register(formData)
-      } catch (err){
+        navigate('/dashboard')
+      } catch (err) {
         if (axios.isAxiosError(err)) {
-          setError(err.response?.data.error)
-        }      }
+          setError(err.response?.data)
+        }
+      }
     }
     else { setError("Password differents") }
   }
@@ -29,6 +35,8 @@ export function Register() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value })
   }
+
+
   //render
   return <>
     <form onSubmit={handleSubmit}>
@@ -38,6 +46,7 @@ export function Register() {
       <button>Inscription</button>
     </form>
     {error}
+    <Link to="/login">Déjà un compte ? Se connecter</Link>
   </>
 }
 
