@@ -56,9 +56,9 @@ export const logInUser = async (req: Request, res: Response, next: NextFunction)
                 return res.status(401).json(result.error)
             }
             // générer un JWT avec jwt.sign()
-            const jtwToken = jtw.sign({ id: existingUser.id, email: existingUser.email }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
+            const jwtToken = jtw.sign({ id: existingUser.id, email: existingUser.email }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
             // sinon statut 200 + token + user: { id, email }
-            res.status(200).json({ jtwToken, user: { id: existingUser.id, email: existingUser.email } })
+            res.status(200).json({ jwtToken, user: { id: existingUser.id, email: existingUser.email } })
         }
     } catch (error) {
         next(error);
