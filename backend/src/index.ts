@@ -5,6 +5,7 @@ import { dirname, resolve } from 'path';
 import express from 'express';
 import authRoutes from "./routes/authentication.routes.js"
 import { verifToken } from './middleware/authMiddleware.js';
+import budgetsRoutes from "./routes/budget.routes.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,6 +23,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/auth', authRoutes);
 app.use(verifToken);
+app.use('/api/v1', budgetsRoutes);
 
 
 app.listen(PORT, () => {
