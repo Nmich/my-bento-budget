@@ -1,18 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { createUser, findUserByEmail } from '../models/user.model.js'
-import * as z from "zod";
-import bcrypt from 'bcrypt';
-import jtw from 'jsonwebtoken';
+import { validationUser } from '../validator/auth.validator.js';
+import { hashPassword, comparePassword, generateToken } from '../services/auth.service.js'
 
-const validationUser = z.object({
-    email: z.email(),
-    password: z.string().min(8)
-});
-
-async function hashPassword(plainPassword: string) {
-    const saltRounds = 12
-    return await bcrypt.hash(plainPassword, saltRounds)
-}
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -49,14 +39,12 @@ export const logInUser = async (req: Request, res: Response, next: NextFunction)
             if (!existingUser?.email) {
                 return res.status(401).json(result.error)
             }
-            // comparer le password reçu avec le password haché en bdd
-            const match = await bcrypt.compare(result.data.password, existingUser.password_hash);
             // si match est false → statut 401
+            const match = await comparePassword(result.data.password, existingUser.password_hash)
             if (!match) {
                 return res.status(401).json(result.error)
             }
-            // générer un JWT avec jwt.sign()
-            const jwtToken = jtw.sign({ id: existingUser.id, email: existingUser.email }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
+            const jwtToken = generateToken(existingUser.id,existingUser.email)
             // sinon statut 200 + token + user: { id, email }
             res.status(200).json({ jwtToken, user: { id: existingUser.id, email: existingUser.email } })
         }
