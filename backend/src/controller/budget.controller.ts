@@ -9,7 +9,7 @@ export const registerBudget = async (req: Request, res: Response, next: NextFunc
             return res.status(400).json('invalid data');
         } else {
             const userId = req.user.id
-            const newBudget = await createBudget({ user_id: userId, amount: result.data?.amount, month: result.data?.month })
+            const newBudget = await createBudget({user_id: userId , amount: result.data.amount, month: result.data?.month })
             res.status(201).json(newBudget)
         }
     } catch (error) {
