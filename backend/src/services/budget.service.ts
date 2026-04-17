@@ -6,7 +6,7 @@ export async function getBudgetSummary(user_id: string, month: string): Promise 
     const budget = await findBudgetByMonth(user_id, month)
     if (!budget) return null
     const total = await findExpenseByMonth(user_id, month)
-    const total_spent = total?.totalExpense as number
+    const total_spent = total?.totalExpense as number ?? 0
     const budgetAmount = budget.amount as number
     const remaining =  budgetAmount - total_spent
     return { budget: { amount: budgetAmount,  month : month }, total_spent, remaining}

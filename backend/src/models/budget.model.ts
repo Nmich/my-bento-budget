@@ -22,9 +22,8 @@ export const findBudgetByUserId = async (user_id: string): Promise<Budget | null
 
 export const findBudgetByMonth = async (user_id:string, month: string): Promise<Budget | null> => {
     const result = await getPool().query<Budget>(
-        `SELECT * FROM budgets WHERE user_id = $1 AND month = $2`,
+        `SELECT * FROM budgets WHERE user_id = $1 AND TO_CHAR(month, 'YYYY-MM') = $2`,
         [user_id, month]
     );
-
     return result.rows[0] ?? null;
 };
