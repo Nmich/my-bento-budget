@@ -17,3 +17,12 @@ export type BudgetResponse = {
     amount: number;
     month: string;
 };
+
+export type BudgetMonth = {
+    budget: {
+        amount: number,
+        month: string;
+    }
+    total_spent: number;
+    remaining: number;
+};

@@ -1,4 +1,4 @@
-import type { Budget, CreateBudgetDTO, BudgetResponse } from '../types/budget.types.js';
+import type { Budget, CreateBudgetDTO, BudgetResponse, BudgetMonth } from '../types/budget.types.js';
 import getPool from './db.js';
 
 export const createBudget = async (data: CreateBudgetDTO): Promise<BudgetResponse> => {
@@ -15,6 +15,15 @@ export const findBudgetByUserId = async (user_id: string): Promise<Budget | null
     const result = await getPool().query<Budget>(
         `SELECT * FROM budgets WHERE user_id = $1`,
         [user_id]
+    );
+
+    return result.rows[0] ?? null;
+};
+
+export const findBudgetByMonth = async (user_id:string, month: string): Promise<Budget | null> => {
+    const result = await getPool().query<Budget>(
+        `SELECT * FROM budgets WHERE user_id = $1 AND month = $2`,
+        [user_id, month]
     );
 
     return result.rows[0] ?? null;
