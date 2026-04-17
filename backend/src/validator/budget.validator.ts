@@ -2,5 +2,5 @@ import * as z from "zod";
 
 export const validationBudget = z.object({
     amount: z.number(),
-    month: z.string()
+    month: z.string().transform(val => `${val}-01`)
 })

@@ -19,3 +19,12 @@ export const findExpenseByUserId = async (user_id: string): Promise<Expense | nu
 
     return result.rows[0] ?? null;
 };
+
+export const findExpenseByMonth = async (user_id: string, month: string): Promise<{ totalExpense: number } | null> => {
+    const result = await getPool().query<{ totalExpense: number }>(
+        `SELECT SUM(amount) as totalExpense FROM expenses WHERE user_id = $1 AND TO_CHAR(date, 'YYYY-MM') = $2`,
+        [user_id, month]
+    );
+
+    return result.rows[0] ?? null;
+};
