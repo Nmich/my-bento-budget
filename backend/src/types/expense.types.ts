@@ -24,3 +24,12 @@ export type ExpenseResponse = {
     description?: string;
     date: string;
 };
+
+export type ExpenseItem = {
+    id: string;
+    amount: number;
+    description: string;
+    date: string;
+    category_id: string;
+    category_name: string;
+}
