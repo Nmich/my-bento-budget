@@ -37,10 +37,10 @@ export const findTotalExpenseByMonth = async (user_id: string, month: string): P
 export const findListExpenseByMonth = async (user_id: string, month: string): Promise<ExpenseItem[]> => {
     const result = await getPool().query<ExpenseItem>(
         `SELECT
-            expenses.id, amount, description, date, category_id, name AS category_name
+            expenses.id, CAST(amount AS FLOAT) AS amount, description, date, category_id, name AS category_name
         FROM expenses
         INNER JOIN categories ON expenses.category_id = categories.id
-        WHERE user_id = $1 AND TO_CHAR(date, 'YYYY-MM') = $2
+        WHERE expenses.user_id = $1 AND TO_CHAR(date, 'YYYY-MM') = $2
         ORDER BY date DESC`,
         [user_id, month]
     );
