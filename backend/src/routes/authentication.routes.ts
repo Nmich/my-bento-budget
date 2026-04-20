@@ -4,5 +4,6 @@ import { logInUser, registerUser } from "../controller/authentication.controller
 const router = Router();
 
 router.post('/register', registerUser);
-router.post('/login', logInUser) //login
+router.post('/login', logInUser)
+
 export default router;
