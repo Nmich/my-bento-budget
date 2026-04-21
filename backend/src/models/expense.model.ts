@@ -2,7 +2,8 @@ import type {
     Expense,
     CreateExpenseDTO,
     ExpenseResponse,
-    ExpenseItem
+    ExpenseItem,
+    ExpenseByCategoryItem
 } from '../types/expense.types.js';
 import getPool from './db.js';
 
@@ -42,6 +43,19 @@ export const findListExpenseByMonth = async (user_id: string, month: string): Pr
         INNER JOIN categories ON expenses.category_id = categories.id
         WHERE expenses.user_id = $1 AND TO_CHAR(date, 'YYYY-MM') = $2
         ORDER BY date DESC`,
+        [user_id, month]
+    );
+    return result.rows;
+};
+
+export const findListExpenseByCategories = async (user_id: string, month: string): Promise<ExpenseByCategoryItem[]> => {
+    const result = await getPool().query<ExpenseByCategoryItem>(
+        `SELECT
+            category_id, name AS category_name, CAST(SUM(amount) AS FLOAT) AS total
+        FROM expenses
+        INNER JOIN categories ON expenses.category_id = categories.id
+        WHERE expenses.user_id = $1 AND TO_CHAR(date, 'YYYY-MM') = $2
+        GROUP BY category_id, category_name`,
         [user_id, month]
     );
     return result.rows;

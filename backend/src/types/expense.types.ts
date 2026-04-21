@@ -33,3 +33,9 @@ export type ExpenseItem = {
     category_id: string;
     category_name: string;
 }
+
+export type ExpenseByCategoryItem = {
+    category_id: string;
+    category_name: string;
+    total: number;
+}
