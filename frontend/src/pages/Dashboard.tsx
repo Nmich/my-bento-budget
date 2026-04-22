@@ -7,11 +7,14 @@ import axios from "axios";
 
 export default function Dashboard() {
     const dateformat = new Date().toISOString().slice(0, 7)
+
     const [currentMonth, setCurrentMonth] = useState<string>(dateformat);
     const [budgetData, setBudgetData] = useState<BudgetData | null>(null);
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [expensesCategory, setExpensesCategory] = useState<ExpenseByCategory[]>([]);
     const [error, setError] = useState('')
+
+    const currentDate = new Date(currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
 
     useEffect(() => {
         async function fetchData() {
@@ -37,9 +40,31 @@ export default function Dashboard() {
         fetchData()
     }, [currentMonth])
 
+    const expensesItems = expenses.map(expense =>
+        <li key={expense.id}>
+            {expense.date} - {expense.category_name} - {expense.amount} - {expense.description}
+        </li>)
+
+    const expensesCategoryItems = expensesCategory.map(category =>
+        <li key={category.category_id}>
+            {category.category_name} - {category.total}
+        </li>)
 
     return (
-        <div>Dashboard</div>
+        <>
+            <div>{currentDate}</div>
+            {budgetData && (
+                <>
+                    <div>{budgetData.budget.amount}</div>
+                    <div>{budgetData.total_spent}</div>
+                    <div>{budgetData.remaining}</div>
+                </>
+            )}
+            {!budgetData && <div>il n'y a aucun budget pour ce mois</div>}
+            <ul>{expensesItems}</ul>
+            <ul>{expensesCategoryItems}</ul>
+            {error}
+        </>
     )
 }
 
