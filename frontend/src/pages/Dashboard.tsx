@@ -14,8 +14,6 @@ export default function Dashboard() {
     const [expensesCategory, setExpensesCategory] = useState<ExpenseByCategory[]>([]);
     const [error, setError] = useState('')
 
-    const currentDate = new Date(currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
-
     useEffect(() => {
         async function fetchData() {
             try {
@@ -40,9 +38,14 @@ export default function Dashboard() {
         fetchData()
     }, [currentMonth])
 
+    const currentDate = (date: string) => new Date(date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    const formatDate = (date: string) =>
+        new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+
+
     const expensesItems = expenses.map(expense =>
         <li key={expense.id}>
-            {expense.date} - {expense.category_name} - {expense.amount} - {expense.description}
+            {formatDate(expense.date)} - {expense.category_name} - {expense.amount} - {expense.description}
         </li>)
 
     const expensesCategoryItems = expensesCategory.map(category =>
@@ -52,7 +55,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <div>{currentDate}</div>
+            <div>{currentDate(currentMonth)}</div>
             {budgetData && (
                 <>
                     <div>{budgetData.budget.amount}</div>
